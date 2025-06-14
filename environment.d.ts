@@ -3,6 +3,7 @@ type DomainEnvironment = {
     NODE_ENV: string
     SERVER_PORT: number | string
     LOGGING_LEVEL: string
+    RAILWAY_TOKEN: string
 
     // Cors
     CORS_ALLOWED_ORIGINS?: string
