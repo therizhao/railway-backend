@@ -24,7 +24,7 @@ app.use(json());
 app.use(urlencoded({ extended: true }));
 app.set('port', process.env.SERVER_PORT ?? 3000);
 
-app.post("/", async (req, res) => {
+app.get("/", async (req, res) => {
   log.debug('Received hello request');
   res.status(200).json({ message: 'hello' });
 });
