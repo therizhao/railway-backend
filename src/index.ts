@@ -1,14 +1,13 @@
-import { config } from 'dotenv';
-config();
-
 import cors from 'cors';
 import express, { json, urlencoded } from 'express';
 import helmet from 'helmet';
 import http from 'http';
 import cookieParser from 'cookie-parser';
-import { createLogger } from './util/LoggerFactory';
-import { authMiddleware, hash, EXPECTED_HASH } from './util/auth';
+import { createLogger } from './util/logger';
+import { configEnv } from './util/env';
+import { authMiddleware, hash, checkHashedPassword } from './util/auth';
 
+configEnv()
 
 const app = express();
 const server = http.createServer(app);
@@ -35,15 +34,17 @@ app.get('/', (_req, res) => {
 
 app.post('/login', (req, res) => {
   const { password } = req.body ?? {};
+  const hashedPassword = hash(password);
 
-  if (password && hash(password) === EXPECTED_HASH) {
-    res.cookie('auth', EXPECTED_HASH, {
+  if (password && checkHashedPassword(hashedPassword)) {
+    res.cookie('auth', hashedPassword, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
       maxAge: 24 * 60 * 60 * 1000 // 24h
     });
-    return res.status(200).json({ message: 'Logged in' });
+    res.status(200).json({ message: 'Logged in' });
+    return;
   }
 
   res.status(401).json({ error: 'Invalid credentials' });
