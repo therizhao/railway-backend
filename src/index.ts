@@ -51,7 +51,11 @@ app.post('/login', (req, res) => {
 });
 
 app.post('/logout', (_req, res) => {
-  res.clearCookie('auth', { httpOnly: true, sameSite: 'strict' });
+  res.clearCookie('auth', {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'none'
+  });
   res.status(200).json({ message: 'Logged out' });
 });
 
