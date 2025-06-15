@@ -54,7 +54,8 @@ app.post('/logout', (_req, res) => {
   res.clearCookie('auth', {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'none'
+    sameSite: 'none',
+    path: '/'
   });
   res.status(200).json({ message: 'Logged out' });
 });
