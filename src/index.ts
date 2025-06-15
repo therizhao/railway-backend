@@ -40,7 +40,7 @@ app.post('/login', (req, res) => {
     res.cookie('auth', hashedPassword, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      sameSite: 'none',       // allow cross-site
       maxAge: 24 * 60 * 60 * 1000 // 24h
     });
     res.status(200).json({ message: 'Logged in' });
